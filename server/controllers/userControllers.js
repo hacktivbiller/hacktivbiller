@@ -1,5 +1,7 @@
 const User = require('../models/user')
 const Helper = require('../helpers/helper')
+const { OAuth2Client } = require('google-auth-library')
+const client = new OAuth2Client(process.env.CLIENT_ID)
 
 class UserController {
     static register(req, res) {        
@@ -49,6 +51,47 @@ class UserController {
         .catch(err => {
             res.status(500).json(err)
         })
+    }
+
+    static loginGoogle(req, res) {
+        let newEmail = ''
+        let newName = ''
+
+        client.verifyIdToken({
+                idToken: req.headers.token,
+                audience: process.env.CLIENT_ID
+            })
+            .then(function(ticket) {
+                newEmail = ticket.getPayload().email
+                newName = ticket.getPayload().name
+                return User.findOne({
+                    email: newEmail
+                })
+            })
+            .then(function(userLogin) {
+                if (!userLogin) {
+                    return User.create({
+                        name: newName,
+                        email: newEmail,
+                        password: 'password'
+                    })
+                } else {
+                    return userLogin
+                }
+            })
+            .then(function(newUser) {
+                let access_token = Helper.generateJWT({
+                    email: newUser.email,
+                    firstName: newUser.firstName,
+                    lastName: newUser.lastName,
+                    id: newUser._id
+                });
+
+                res.status(200).json(access_token)
+            })
+            .catch(function(err) {
+                res.status(500).json(err)
+            })
     }
 
     static list(req, res) {
