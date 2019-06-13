@@ -7,7 +7,7 @@ const AX_ZOMATO = axios.create({
     user_key: process.env.ZOMATO_API
   }
 });
- 
+
 // ANOTHER API GOES HERE
 
 module.exports = {
