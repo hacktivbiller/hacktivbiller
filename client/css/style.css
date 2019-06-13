@@ -1,0 +1,7 @@
+.color-green { color: #3ede46; }
+.color-blue { color: #1f57de }
+.color-grey4 { color: #616161; }
+
+
+#login__register-btn:hover {cursor: pointer;}
+#register__login-btn:hover {cursor: pointer;}
