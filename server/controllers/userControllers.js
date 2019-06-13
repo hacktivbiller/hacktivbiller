@@ -5,10 +5,10 @@ const client = new OAuth2Client(process.env.CLIENT_ID)
 
 class UserController {
     static register(req, res) {        
-        const {email, password, firstName, lastName} = req.body
+        const {name, email, password} = req.body
 
         User.create({
-            firstName, lastName, email, password
+            name, email, password
         })
         .then(user=> {
             res.status(201).json(user)
