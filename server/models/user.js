@@ -3,7 +3,7 @@ const {Schema} = mongoose;
 const Helper = require('../helpers/helper')
 
 const userSchema = new Schema({
-    name: {
+    username: {
         type: String,
         required: true
     },

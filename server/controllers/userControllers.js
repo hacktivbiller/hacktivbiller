@@ -1,14 +1,14 @@
 const User = require('../models/user')
 const Helper = require('../helpers/helper')
 const { OAuth2Client } = require('google-auth-library')
-const client = new OAuth2Client(process.env.CLIENT_ID)
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
 
 class UserController {
     static register(req, res) {        
-        const {name, email, password} = req.body
+        const {username, email, password} = req.body
 
         User.create({
-            name, email, password
+            username, email, password
         })
         .then(user=> {
             res.status(201).json(user)
@@ -32,7 +32,7 @@ class UserController {
         })
         .then(user => {
             if(!user) {
-                throw 'Username/password wrong'
+                res.status(400).json({ err: "Username/Password wrong" });
             } else {
                 if( Helper.comparePassword(password, user.password) ) {
                     let access_token = Helper.generateJWT({
@@ -49,6 +49,7 @@ class UserController {
             }
         })
         .catch(err => {
+            console.log(err);
             res.status(500).json(err)
         })
     }
@@ -58,8 +59,8 @@ class UserController {
         let newName = ''
 
         client.verifyIdToken({
-                idToken: req.headers.token,
-                audience: process.env.CLIENT_ID
+                idToken: req.headers.access_token,
+                audience: process.env.GOOGLE_CLIENT_ID
             })
             .then(function(ticket) {
                 newEmail = ticket.getPayload().email
@@ -71,7 +72,7 @@ class UserController {
             .then(function(userLogin) {
                 if (!userLogin) {
                     return User.create({
-                        name: newName,
+                        username: newName,
                         email: newEmail,
                         password: 'password'
                     })
@@ -90,6 +91,7 @@ class UserController {
                 res.status(200).json(access_token)
             })
             .catch(function(err) {
+                console.log(err);
                 res.status(500).json(err)
             })
     }
