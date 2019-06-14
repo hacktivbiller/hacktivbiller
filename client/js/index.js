@@ -138,6 +138,7 @@ $(function() {
             q: "review" + encodeURIComponent($("#search").val()).replace(/%20/g, "+"),
             order: "relevance",
             maxResults: 3,
+
             publishedAfter: "2019-01-01T00:00:00Z"
        }); 
        // execute the request
@@ -145,7 +146,6 @@ $(function() {
           var results = response.result;
           $("#results").html("");
           $.each(results.items, function(index, item) {
-              console.log(item)
             $.get("tpl/item.html", function(data) {
                 $("#results").append(tplawesome(data, [{"title":item.snippet.title, "videoid":item.id.videoId}]));
             });
@@ -161,4 +161,9 @@ function resetVideoHeight() {
     $(".video").css("height", $("#results").width() * 9/16);
 }
 
-
+function init() {
+    gapi.client.setApiKey("AIzaSyB1r4dpBP-lLxR-TfKyMicVkcm4f2gfmms");
+    gapi.client.load("youtube", "v3", function() {
+        // yt api is ready
+    });
+}
