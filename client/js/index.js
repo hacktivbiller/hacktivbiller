@@ -3,9 +3,24 @@ initPage = () => {
         $("#auth").show()
         $("#register__page").hide()
         $("#main").hide()
+        $('#homepage').hide()
+        $('#front-end').hide()
     }else{
+        // $("#register__page").hide()
         $("#auth").hide()
         $("#main").show()
+        $('#homepage').show()
+        $('#front-end').hide()
+
+        $('#buttonIn').click(function(){
+            $('#front-end').show()
+            $('#homepage').hide()
+        })
+
+        $('#buttonPrim').click(function(){
+            $('#front-end').hide()
+            $('#homepage').show()
+        })
     }
 }
 
@@ -112,17 +127,88 @@ $(document).ready(function() {
         $("#register__page").hide()
         $("#login__page").show()
     })
+
+    $("#searchForm").on('submit', function(){
+        event.preventDefault()
+        searchResto()
+    })
 })
 
-$('#homepage').show()
-$('#front-end').hide()
+function searchResto(){
+    let resto = $("#search").val()
+    console.log(resto, 'ini dari function search')
+    
+    $.ajax({
+        url : `http://localhost:3000/api/getRecipe?q=${resto}`,
+        method : `GET`,
+        headers : {
+            user_key : '5528ebc19275edba27466b8b73841709'
+        }
+    })
+        .done(function(response){
+            let array = response.restaurants[0].restaurant.photos
+            let arrReviews = response.restaurants[0].restaurant.all_reviews.reviews
+            console.log(response)
+            console.log(array)
+            $('#contentPhotos').empty()
+            $('#crsl').empty()
 
-$('#buttonIn').click(function(){
-    $('#front-end').show()
-    $('#homepage').hide()
-})
+            // <img
+            //           class="d-block img-fluid"
+            //           src="http://glasgowwestend.today/wp-content/uploads/sites/11/2016/11/Kelbourne-Saint-1-copy-1-900x350.jpeg"
+            //           alt="First slide"
+            //         />
 
-$('#buttonPrim').click(function(){
-    $('#front-end').hide()
-    $('#homepage').show()
-})
+            // <p max-length='200'>${rev.review.review_text}</p>
+
+            arrReviews.forEach((rev, i) => {
+                if(i < 3){
+                    $('#crsl').append(
+                      `<div class="carousel-item active">
+                            <img
+                            class="d-block img-fluid"
+                            src="http://glasgowwestend.today/wp-content/uploads/sites/11/2016/11/Kelbourne-Saint-1-copy-1-900x350.jpeg"
+                            alt="First slide"
+                            />
+                      </div>`
+                    )
+                }
+            })
+            
+            
+            array.forEach(data => {
+                let random = (Math.round(Math.random()*40)+10)*1000
+                console.log(data)
+                $('#contentPhotos').append(
+                    `<div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100">
+                      <a href="#"
+                        ><img
+                          class="card-img-top"
+                          src=${data.photo.url}
+                          alt=""
+                      /></a>
+                      <div class="card-body">
+                        <h4 class="card-title">
+                          <a href="#">Food</a>
+                        </h4>
+                        <h5>Rp.${random}</h5>
+                        <p class="card-text">
+                          ${data.photo.caption}
+                        </p>
+                      </div>
+                      <div class="card-footer">
+                        <small class="text-muted"
+                          >&#9733; &#9733; &#9733; &#9733; &#9734;</small
+                        >
+                      </div>
+                    </div>
+                  </div>`
+                )
+            });
+        })
+        .fail(function(jqXHR, textStatus){
+            console.log(jqXHR)
+        })
+}
+
