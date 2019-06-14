@@ -113,3 +113,16 @@ $(document).ready(function() {
         $("#login__page").show()
     })
 })
+
+$('#homepage').show()
+$('#front-end').hide()
+
+$('#buttonIn').click(function(){
+    $('#front-end').show()
+    $('#homepage').hide()
+})
+
+$('#buttonPrim').click(function(){
+    $('#front-end').hide()
+    $('#homepage').show()
+})
