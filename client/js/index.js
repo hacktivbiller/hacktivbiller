@@ -147,7 +147,7 @@ function searchResto(){
     })
         .done(function(response){
             let array = response.restaurants[0].restaurant.photos
-            let arrReviews = response.restaurants[0].restaurant.all_reviews.reviews
+            // let arrReviews = response.restaurants[0].restaurant.all_reviews.reviews
             console.log(response)
             console.log(array)
             $('#contentPhotos').empty()
@@ -160,22 +160,6 @@ function searchResto(){
             //         />
 
             // <p max-length='200'>${rev.review.review_text}</p>
-
-            arrReviews.forEach((rev, i) => {
-                if(i < 3){
-                    $('#crsl').append(
-                      `<div class="carousel-item active">
-                            <img
-                            class="d-block img-fluid"
-                            src="http://glasgowwestend.today/wp-content/uploads/sites/11/2016/11/Kelbourne-Saint-1-copy-1-900x350.jpeg"
-                            alt="First slide"
-                            />
-                      </div>`
-                    )
-                }
-            })
-            
-            
             array.forEach(data => {
                 let random = (Math.round(Math.random()*40)+10)*1000
                 console.log(data)
@@ -206,9 +190,40 @@ function searchResto(){
                   </div>`
                 )
             });
+            carosel()       
+
         })
         .fail(function(jqXHR, textStatus){
             console.log(jqXHR)
         })
 }
 
+function carosel(){
+    let str = 'restaurants-900x350'
+    $.ajax({
+        url : `https://localhost:3000/gImage/${str}`,
+        method : "GET"
+    })
+        .done(function(response){
+            
+            let img = response.image_results
+            img.forEach((el, i) => {
+                if(i < 3){
+                    $('#crsl').append(
+                        `<div class="carousel-item active">
+                            <img
+                            class="d-block img-fluid"
+                            src="${el.image}"
+                            alt="First slide"
+                            />
+                        </div>`
+                    )
+                }
+            })
+
+            
+        })
+        .fail(function(jqXHR, textStatus){
+            console.log(jqXHR)
+        })
+}
