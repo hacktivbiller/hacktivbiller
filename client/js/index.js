@@ -87,6 +87,7 @@ logout = () => {
 
 $(document).ready(function() {
     initPage()
+    init()
 
     $("#login__form").on('submit', function() {
         event.preventDefault()
@@ -115,6 +116,16 @@ $(document).ready(function() {
         $("#login__page").show()
     })
 })
+
+function init() {
+    console.log('loading...')
+    gapi.client.setApiKey("AIzaSyB1r4dpBP-lLxR-TfKyMicVkcm4f2gfmms");
+    gapi.client.load("youtube", "v3", function() {
+        // yt api is ready
+        console.log('siap')
+    });
+}
+
 function tplawesome(e,t){res=e;for(var n=0;n<t.length;n++){res=res.replace(/\{\{(.*?)\}\}/g,function(e,r){return t[n][r]})}return res}
 
 $(function() {
@@ -150,10 +161,4 @@ function resetVideoHeight() {
     $(".video").css("height", $("#results").width() * 9/16);
 }
 
-function init() {
-    gapi.client.setApiKey("AIzaSyB1r4dpBP-lLxR-TfKyMicVkcm4f2gfmms");
-    gapi.client.load("youtube", "v3", function() {
-        // yt api is ready
-        console.log('siap')
-    });
-}
+

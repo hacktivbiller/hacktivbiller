@@ -5,7 +5,7 @@ class ApiController {
         const restaurantId = req.query.q
     
         AX_ZOMATO
-        .get(`/dailymenu?res_id=${restaurantId}`)
+        .get(`/search?q=${restaurantId}`)
         .then(recipes => {
             if(recipes) {
                 res.status(200).json(recipes)
