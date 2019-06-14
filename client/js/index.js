@@ -5,6 +5,7 @@ initPage = () => {
         $("#main").hide()
         $('#homepage').hide()
         $('#front-end').hide()
+        $("#results").hide()
     }else{
         // $("#register__page").hide()
         $("#auth").hide()
@@ -21,6 +22,7 @@ initPage = () => {
             $('#front-end').hide()
             $('#homepage').show()
         })
+        $("#results").show()
     }
 }
 
